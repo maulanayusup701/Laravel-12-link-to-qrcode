@@ -1,19 +1,32 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Request;
 
 class GenerateController extends Controller
 {
     public function link()
     {
-        $link = 'https://contoh.com';
+        return view('qrcode.index');
+    }
 
-        // Buat QR code PNG
+    public function generateQR(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'link' => 'required|url',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $link = $validated['link'];
+
+        // Generate QR code PNG dari link
         $result = Builder::create()
             ->writer(new PngWriter())
             ->data($link)
@@ -23,27 +36,22 @@ class GenerateController extends Controller
 
         $qrBinary = $result->getString();
 
-        // Buka stream dari PNG binary
+        // Buat stream dari QR PNG
         $stream = fopen('php://memory', 'r+');
         fwrite($stream, $qrBinary);
         rewind($stream);
 
-        // Gunakan GD driver
+        // Pakai GD driver
         $manager = new ImageManager(new GdDriver());
-
-        // Buat image dari stream
         $qrImage = $manager->read($stream);
 
-        // Path ke logo
-        $logoPath = public_path('logo.png');
-
-        // Cek file logo tersedia
-        if (file_exists($logoPath)) {
-            $logo = $manager->read($logoPath)->resize(80, 80);
+        // Jika logo diupload, tempelkan
+        if ($request->hasFile('logo')) {
+            $logo = $manager->read($request->file('logo')->getPathname())->resize(80, 80);
             $qrImage->place($logo, 'center');
         }
 
-        // Tampilkan QR image
+        // Return sebagai image PNG
         return Response::make($qrImage->toPng())
             ->header('Content-Type', 'image/png');
     }

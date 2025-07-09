@@ -10,5 +10,5 @@ Route::get('/', function () {
 
 Route::controller(GenerateController::class)->group(function () {
     Route::get('/link', 'link');
-    Route::post('/link', 'store')->name('link.store');
+    Route::post('/link', 'generateQR')->name('link.store');
 });
