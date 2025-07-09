@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta charset="UTF-8">
     <title>QR Code Generator</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -49,6 +48,14 @@
         @endif
     </div>
 
+    {{-- script --}}
+    <link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
+        rel="stylesheet" />
+
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+
     {{-- SweetAlert2: Success --}}
     @if (session('qr'))
         <script>
@@ -72,6 +79,17 @@
             });
         </script>
     @endif
+
+    <!-- Tambahkan di bawah <form> -->
+    <script>
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.create(document.querySelector('#logo'), {
+            allowImagePreview: true,
+            imagePreviewMaxHeight: 150,
+            labelIdle: 'Drag & drop logo atau <span class="filepond--label-action">Telusuri</span>',
+        });
+    </script>
+
 </body>
 
 </html>

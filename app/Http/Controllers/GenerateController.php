@@ -21,7 +21,13 @@ class GenerateController extends Controller
         // Validasi input
         $validated = $request->validate([
             'link' => 'required|url',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'link.required' => 'URL tidak boleh kosong.',
+            'link.url' => 'Format URL tidak valid.',
+            'logo.image' => 'File logo harus berupa gambar.',
+            'logo.mimes' => 'Logo hanya boleh jpeg, png, jpg.',
+            'logo.max' => 'Ukuran maksimum logo adalah 2MB.',
         ]);
 
         $link = $validated['link'];
