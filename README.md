@@ -42,27 +42,6 @@ storage/app/public/
 
 ---
 
-## 🗃️ Struktur Tabel Database: `qrcodes`
-
-```php
-Schema::create('qrcodes', function (Blueprint $table) {
-    $table->id();
-    $table->string('link');
-    $table->string('logo_path')->nullable();
-    $table->string('qr_path');
-    $table->timestamps();
-});
-```
-
-Contoh data:
-
-| ID  | Link                  | Logo            | QR Path         | Dibuat     |
-| --- | --------------------- | --------------- | --------------- | ---------- |
-| 1   | https://example.com   | logos/logo1.png | qrcodes/qr1.png | 2025-07-09 |
-| 2   | https://tokowarung.id | null            | qrcodes/qr2.png | 2025-07-09 |
-
----
-
 ## ⚙️ Alur Sistem
 
 ```
